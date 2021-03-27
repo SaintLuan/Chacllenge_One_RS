@@ -34,17 +34,24 @@ export function TaskList() {
           isComplete:false
         };
         setTasks(tasks=>tasks.concat(task));
+        
       }
     }
   }
 
   function handleToggleTaskCompletion(id: number) {
     // Altere entre `true` ou `false` o campo `isComplete` de uma task com dado ID
-    
+    tasks[id].isComplete= !tasks[id].isComplete;
   }
 
   function handleRemoveTask(id: number) {
     // Remova uma task da listagem pelo ID
+    var array = [...tasks];
+    if (id !== -1) {
+      tasks.splice(id, 1);
+      console.log("Splice");
+    }
+    console.log("Teste");
   }
 
   return (
@@ -54,10 +61,10 @@ export function TaskList() {
 
         <div className="input-group">
           <input 
-            type="text" 
-            placeholder="Adicionar novo todo" 
+            type="text"
+            id="taskTitle"
+            placeholder="Adicionar nova tarefa" 
             onChange={(e) => setNewTaskTitle(e.target.value)}
-            value={newTaskTitle}
           />
           <button type="submit" data-testid="add-task-button" onClick={handleCreateNewTask}>
             <FiCheckSquare size={16} color="#fff"/>
@@ -73,9 +80,9 @@ export function TaskList() {
                 <label className="checkbox-container">
                   <input 
                     type="checkbox"
+                    id={`${"checkbox"}${task.id}`}
                     readOnly
                     onClick={() => handleToggleTaskCompletion(task.id)}
-                    checked={task.isComplete}
                   />
                   <span className="checkmark"></span>
                 </label>
