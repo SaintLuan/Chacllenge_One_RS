@@ -16,47 +16,33 @@ export function TaskList() {
 
   function handleCreateNewTask() {
     // Crie uma nova task com um id random, não permita criar caso o título seja vazio.
-    const STRING_IS_EMPTY =/^\s*$/.test(newTaskTitle);
-    if(!STRING_IS_EMPTY){
-      let flag=0;
-      for(let i=0; i< tasks.length; i++){
-        if(tasks[i].title===newTaskTitle)
-          flag++;
-      }
-      if(flag===0){
-        let numId=0;
-        let title =newTaskTitle;
+    if(!newTaskTitle) return;
 
-        tasks.length> 0 ? (numId=tasks.length):(numId=0);
-        
-        setTasks([...tasks, {
-          id: numId,
-          title: newTaskTitle,
-          isComplete:false
-        }]);
-      }
-    }
+    const newTask={
+      id: Math.random(),
+      title: newTaskTitle,
+      isComplete: false
+    };
+
+    setTasks(oldState =>[...oldState, newTask]);
+    setNewTaskTitle('');
   }
   
   function handleToggleTaskCompletion(id: number) {
     // Altere entre `true` ou `false` o campo `isComplete` de uma task com dado ID
-    if(id){
-      const Task_Draft= tasks.find(task=>task.id==id);
 
-      if(Task_Draft){
-        Task_Draft.isComplete=!Task_Draft.isComplete;
-        setTasks([...tasks])
-      }
-    }
+    const newTasks = tasks.map(task => task.id === id ? {
+      ...task,
+      isComplete: !task.isComplete
+    } : task);
+    setTasks(newTasks);
   }
 
   function handleRemoveTask(id: number) {
     // Remova uma task da listagem pelo ID
-    if (id) {
-      const taskIndex = tasks.findIndex(task=>task.id===id);
-      tasks.splice(taskIndex, 1);
-      setTasks([...tasks]);
-    }
+    const filteredTask = tasks.filter(task => task.id !== id);
+
+    setTasks(filteredTask);
   }
  
 
@@ -71,6 +57,7 @@ export function TaskList() {
             id="taskTitle"
             placeholder="Adicionar nova tarefa" 
             onChange={(e) => setNewTaskTitle(e.target.value)}
+            value={newTaskTitle}
           />
           <button type="submit" data-testid="add-task-button" onClick={handleCreateNewTask}>
             <FiCheckSquare size={16} color="#fff"/>
@@ -93,7 +80,6 @@ export function TaskList() {
                   />
                   <span className="checkmark"></span>
                 </label>
-                <p>{task.id}</p>
                 <p>{task.title}</p>
               </div>
 
