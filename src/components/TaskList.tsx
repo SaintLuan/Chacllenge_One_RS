@@ -53,9 +53,8 @@ export function TaskList() {
 
         <div className="input-group">
           <input 
-            type="text"
-            id="taskTitle"
-            placeholder="Adicionar nova tarefa" 
+            type="text" 
+            placeholder="Adicionar novo todo" 
             onChange={(e) => setNewTaskTitle(e.target.value)}
             value={newTaskTitle}
           />
@@ -73,9 +72,8 @@ export function TaskList() {
                 <label className="checkbox-container">
                   <input 
                     type="checkbox"
-                    checked={task.isComplete}
-                    id={`${"checkbox"}${task.id}`}
                     readOnly
+                    checked={task.isComplete}
                     onClick={() => handleToggleTaskCompletion(task.id)}
                   />
                   <span className="checkmark"></span>
