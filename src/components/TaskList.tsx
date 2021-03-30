@@ -16,7 +16,8 @@ export function TaskList() {
 
   function handleCreateNewTask() {
     // Crie uma nova task com um id random, não permita criar caso o título seja vazio.
-    if(newTaskTitle !== ''){
+    const STRING_IS_EMPTY =/^\s*$/.test(newTaskTitle);
+    if(!STRING_IS_EMPTY){
       let flag=0;
       for(let i=0; i< tasks.length; i++){
         if(tasks[i].title===newTaskTitle)
@@ -28,31 +29,36 @@ export function TaskList() {
 
         tasks.length> 0 ? (numId=tasks.length):(numId=0);
         
-        const task={
-          id:numId,
-          title:title,
+        setTasks([...tasks, {
+          id: numId,
+          title: newTaskTitle,
           isComplete:false
-        };
-        setTasks(tasks=>tasks.concat(task));
-        
+        }]);
+      }
+    }
+  }
+  
+  function handleToggleTaskCompletion(id: number) {
+    // Altere entre `true` ou `false` o campo `isComplete` de uma task com dado ID
+    if(id){
+      const Task_Draft= tasks.find(task=>task.id==id);
+
+      if(Task_Draft){
+        Task_Draft.isComplete=!Task_Draft.isComplete;
+        setTasks([...tasks])
       }
     }
   }
 
-  function handleToggleTaskCompletion(id: number) {
-    // Altere entre `true` ou `false` o campo `isComplete` de uma task com dado ID
-    tasks[id].isComplete= !tasks[id].isComplete;
-  }
-
   function handleRemoveTask(id: number) {
     // Remova uma task da listagem pelo ID
-    var array = [...tasks];
-    if (id !== -1) {
-      tasks.splice(id, 1);
-      console.log("Splice");
+    if (id) {
+      const taskIndex = tasks.findIndex(task=>task.id===id);
+      tasks.splice(taskIndex, 1);
+      setTasks([...tasks]);
     }
-    console.log("Teste");
   }
+ 
 
   return (
     <section className="task-list container">
@@ -80,6 +86,7 @@ export function TaskList() {
                 <label className="checkbox-container">
                   <input 
                     type="checkbox"
+                    checked={task.isComplete}
                     id={`${"checkbox"}${task.id}`}
                     readOnly
                     onClick={() => handleToggleTaskCompletion(task.id)}
